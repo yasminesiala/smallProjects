@@ -119,7 +119,7 @@ void run_hangman(const char *secret) {
 
 
   for (int i = 0; i < strlen(secret); i++) {
-	  if (secret[i] == ' ' || secret[i] == '-' || secret [i] == ' ') {
+	  if (secret[i] == ' ' || secret[i] == '-' || secret[i] == '\\') {
 		  phrase_display[i] = secret[i];
 	  } else {
 		  phrase_display[i] = '_';
@@ -127,13 +127,15 @@ void run_hangman(const char *secret) {
   }
   phrase_display[strlen(secret)] = '\0';
 
-  printf("%s\nPhrase: %s\nEliminated:\nGuess a letter:\n", arts[0], phrase_display);
 
  	 while (guesses_left > 0 && !has_won) {
-	 	 char guess = prompt_for_and_read_character();
+	 	printf("%s\n", arts[6 - guesses_left]); // Print the art first
+printf("    Phrase: %s\n", phrase_display); // Display the phrase
+printf("Eliminated: %s\n", eliminated_letters); // Show eliminated letters
+printf("\n");
+		 char guess = prompt_for_and_read_character();
 
 	 	 if (strchr(eliminated_letters, guess) || strchr(phrase_display, guess)) {
-			  printf("Guess a letter:\n");
 			  continue;
 	 }
 
@@ -167,8 +169,6 @@ void run_hangman(const char *secret) {
 			}
 		}
 	}
-
-	printf("%s\nPhrase: %s\nEliminated: %s\nGuess a letter:\n", arts[6 - guesses_left], phrase_display, secret);
   }
  
   if (has_won) {
