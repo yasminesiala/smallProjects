@@ -8,8 +8,7 @@
 * checks whether c is between 'a' and 'z'.
 */
 bool is_lowercase_letter(char c) {
-    // Replace this comment with your source code.
-    return false;
+    return (c >= 'a' && c <= 'z');// Replace this comment with your source code.
 }
 
 /*
@@ -21,7 +20,11 @@ bool is_lowercase_letter(char c) {
 * "RETURN VALUE" for the best summary.
 */
 bool string_contains_character(const char *string, char ch) {
-    // Replace this comment with your source code.
+    for (int i = 0; i < strlen(string); i++) {
+	if (string[i] == ch) {
+		return true; 
+	}
+     }// Replace this comment with your source code.
     return false;
 }
 
@@ -52,8 +55,22 @@ bool string_contains_character(const char *string, char ch) {
 * defined for you in hangman_strings.h).
 */
 bool is_valid_secret(const char *secret) {
-    // Replace this comment with your source code.
-    return false;
+    //check if len of secret exceeds max length
+    if (strlen(secret) > MAX_LENGTH) {
+	    printf(MSG_LONG_SECRET_d, MAX_LENGTH);
+	    return false;
+	    // Replace this comment with your source code
+    }
+
+    for (int i = 0; i < strlen(secret); i++) {
+	    char c = secret[i];
+
+	    if (!(is_lowercase_letter(c) || string_contains_character(punctuation, c))) {
+		    printf(MSG_INVALID_CHAR_c, c);
+   		    return false;
+	    }
+	}
+    return true; 
 }
 
 /*
@@ -69,17 +86,100 @@ bool is_valid_secret(const char *secret) {
 * 5. Return the character.
 */
 char prompt_for_and_read_character(void) {
-    // Replace this comment with your source code.
-    return 0;
+    int ch;
+    
+    printf(MSG_PROMPT);
+    
+    while(1) {
+	    ch = getchar();
+	    
+	    if (ch == '\n') {
+		    continue;
+	    }
+	    
+	    if (ch == EOF) {
+		    exit(1);
+	    } // Replace this comment with your source code.
+   	 return (char) ch;
+   }
 }
 
 /*
 * See Section 2 of the assignment PDF.
 */
 void run_hangman(const char *secret) {
-    // Replace this comment with your source code.
-}
+  int guesses_left = 6;
+  char phrase_display[MAX_LENGTH] = {0};
+  char eliminated_letters[27] = "";
+  bool has_won = false;
+  
+  if (!is_valid_secret(secret)) {
+	  exit(1);
+  } 
 
+
+  for (int i = 0; i < strlen(secret); i++) {
+	  if (secret[i] == ' ' || secret[i] == '-' || secret [i] == ' ') {
+		  phrase_display[i] = secret[i];
+	  } else {
+		  phrase_display[i] = '_';
+	  }
+  }
+  phrase_display[strlen(secret)] = '\0';
+
+  printf("%s\nPhrase: %s\nEliminated:\nGuess a letter:\n", arts[0], phrase_display);
+
+ 	 while (guesses_left > 0 && !has_won) {
+	 	 char guess = prompt_for_and_read_character();
+
+	 	 if (strchr(eliminated_letters, guess) || strchr(phrase_display, guess)) {
+			  printf("Guess a letter:\n");
+			  continue;
+	 }
+
+	//check if guessed letter in secret
+	 bool found = false;
+	 for (int i = 0; i < strlen(secret); i++) {
+		 if (secret[i] == guess) {
+			 phrase_display[i] = guess;
+			 found = true;
+		}
+	}
+
+	if (found) {
+		if (strcmp(phrase_display, secret) == 0) {
+			has_won = true;
+		}
+	} else {
+		int len = strlen(eliminated_letters);
+		eliminated_letters[len] = guess;
+		eliminated_letters[len + 1] = '\0';
+		guesses_left--;
+
+		//sort
+		for (int i = 0; i < len; i++) {
+			for (int j = i + 1; j < len + 1; j++) {
+				if (eliminated_letters[i] > eliminated_letters[j]) {
+					char temp = eliminated_letters[i];
+					eliminated_letters[i] = eliminated_letters[j];
+					eliminated_letters[j] = temp;
+				}
+			}
+		}
+	}
+
+	printf("%s\nPhrase: %s\nEliminated: %s\nGuess a letter:\n", arts[6 - guesses_left], phrase_display, secret);
+  }
+ 
+  if (has_won) {
+	  printf("%s\nPhrase: %s\nEliminated: %s\nYou win! The secret phrase was: %s\n", arts[6], phrase_display, eliminated_letters, secret);
+
+ } else {
+	 printf("%s\nPhrase: %s\nEliminated: %s\nYou lose! The secret phrase was: %s\n", arts[6], phrase_display, eliminated_letters, secret);
+}
+}
+   // Replace this comment with your source code.}
+//nts: deleted } here 
 /*
 * 1. Check the value of argc to confirm that the user runs hangman with a
 *    "secret" on the command line.  If the user puts the wrong number of
@@ -91,6 +191,12 @@ void run_hangman(const char *secret) {
 * 4. Return 0.
 */
 int main(int argc, char **argv) {
-    // Replace this comment with your source code.
-    return 0;
+    if (argc != 2) {
+	  printf("%s\n", MSG_WRONG_NUM_ARGS);
+	  return 1;
+   } 
+   
+   run_hangman(argv[1]);
+   // Replace this comment with your source code.
+   return 0;
 }
