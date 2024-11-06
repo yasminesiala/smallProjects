@@ -10,4 +10,5 @@ randi.o: randi.c
 game.o: game.c
 	clang -c game.c
 
-
+clean:
+	rm -f *.o lcr

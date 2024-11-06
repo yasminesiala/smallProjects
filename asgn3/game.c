@@ -208,7 +208,7 @@ void play_game(int seed, int num_players) {
     
     int pot = 0;
     print_scores(num_players);
-    printf("    %d -- pot\n\n", pot);
+    printf("    %d -- pot\n", pot);
 
     while (1) {
 	    int players_with_chips = 0;
