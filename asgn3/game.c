@@ -115,7 +115,10 @@ int score[MAX_PLAYERS];
 *   RIGHT    'R'
 */
 char letter_of_symbol(Symbol sym) {
-    // Replace this comment with your source code.
+    if (sym == DOT){ return '.';}
+    if (sym == LEFT){ return 'L';}
+    if (sym == CENTER){return 'C';}
+    if (sym == RIGHT){ return 'R';}// Replace this comment with your source code.
     return 0;
 }
 
@@ -123,7 +126,8 @@ char letter_of_symbol(Symbol sym) {
 * Return a or b, whichever is smallest.
 */
 int min(int a, int b) {
-    // Replace this comment with your source code.
+    if ( a < b){ return a;}
+    if (b < a){ return b;}// Replace this comment with your source code.
     return 0;
 }
 
@@ -132,8 +136,7 @@ int min(int a, int b) {
 * convert the result into a number between 0 and 5.
 */
 int rand_roll(void) {
-    // Replace this comment with your source code.
-    return 0;
+    return randi() % 6;// Replace this comment with your source code.
 }
 
 /*
@@ -142,7 +145,8 @@ int rand_roll(void) {
 * PDF.)
 */
 int left_of(int player, int num_players) {
-    // Replace this comment with your source code.
+    if (player == 0) { return num_players - 1; }
+    return player - 1;// Replace this comment with your source code.
     return 0;
 }
 
@@ -152,7 +156,8 @@ int left_of(int player, int num_players) {
 * PDF.)
 */
 int right_of(int player, int num_players) {
-    // Replace this comment with your source code.
+    if (player == num_players - 1) { return 0; }
+    return player + 1;// Replace this comment with your source code.
     return 0;
 }
 
@@ -176,6 +181,18 @@ Current scores:
 * represent.
 */
 void print_scores(int num_players) {
+    int total_chips = 3 * num_players;// total chips in the game
+    int sum_of_scores = 0;
+    
+    printf(CURRENT_SCORES);
+    
+    for (int i = 0; i < num_players; i++){
+	    printf(SCORE_ds, score[i], player_name[i]);
+	    sum_of_scores += score[i];
+    }
+    
+    //calculate pot:
+    int pot = total_chips - sum_of_scores;
     // Replace this comment with your source code.
 }
 
@@ -183,6 +200,68 @@ void print_scores(int num_players) {
 * Play the game.  See Section 2 of the assignment PDF for details.
 */
 void play_game(int seed, int num_players) {
+    randi_seed(seed);
+    
+    for (int i = 0; i < num_players; i++) {
+	    score[i] = 3;
+    } 
+    
+    int pot = 0;
+    print_scores(num_players);
+    printf("    %d -- pot\n\n", pot);
+
+    while (1) {
+	    int players_with_chips = 0;
+	    int last_player = -1;
+
+	    for (int i = 0; i < num_players; i++){
+		    if (score[i] > 0) {
+			    players_with_chips++;
+		    	    last_player = i;
+		    }
+ 	    }
+
+	    if (players_with_chips == 1) {
+		    printf(ONE_PLAYER_HAS_CHIPS);
+		    printf(WON_s, player_name[last_player]);
+		    break;
+	    }
+
+	    for (int i = 0; i < num_players; i++) {
+		    if (score[i] == 0) { printf(HAS_NO_CHIPS_s, player_name[i]); }
+		    printf(TURN_s, player_name[i]);
+
+		    int num_dice = score[i] < 3 ? score[i] : 3;
+
+		    //roll and perform turns
+		    for (int j = 0; j < num_dice; j++){
+			   int roll =  rand_roll();
+			   Symbol sym = symbol_of_roll[roll];
+			   char symbol_char = letter_of_symbol(sym);
+			   
+			   printf(ROLLS_c, symbol_char);
+
+			   if (sym == DOT){};
+			   if (sym == LEFT){ 
+				   int left_player = left_of(i, num_players);
+				   score[i]--;
+				   score[left_player]++;
+			           printf(GIVES_A_CHIP_TO_s, player_name[left_player]);
+			 	    }
+			   if (sym == CENTER) {
+				   score[i]--;
+				   pot++;
+			   	   printf(PUTS_A_CHIP);}
+			   if (sym == RIGHT) {
+				   int right_player = right_of(i, num_players);
+				   score[i]--;
+				   score[right_player]++;
+			   	   printf(GIVES_A_CHIP_TO_s, player_name[right_player]);} 
+			   }
+	    print_scores(num_players);
+            printf("    %d -- pot\n", pot);    
+	    }
+
     // Replace this comment with your source code.
 }
-
+}
