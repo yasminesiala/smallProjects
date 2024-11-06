@@ -145,8 +145,8 @@ int rand_roll(void) {
 * PDF.)
 */
 int left_of(int player, int num_players) {
-    if (player == 0) { return num_players - 1; }
-    return player - 1;// Replace this comment with your source code.
+    if (player == num_players - 1) { return 0; }
+    return player +  1;// Replace this comment with your source code.
     return 0;
 }
 
@@ -156,8 +156,8 @@ int left_of(int player, int num_players) {
 * PDF.)
 */
 int right_of(int player, int num_players) {
-    if (player == num_players - 1) { return 0; }
-    return player + 1;// Replace this comment with your source code.
+    if (player == 0) { return num_players - 1; }
+    return player - 1;// Replace this comment with your source code.
     return 0;
 }
 
