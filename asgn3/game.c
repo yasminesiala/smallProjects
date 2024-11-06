@@ -229,7 +229,7 @@ void play_game(int seed, int num_players) {
 
 	    for (int i = 0; i < num_players; i++) {
 		    if (score[i] == 0) { printf(HAS_NO_CHIPS_s, player_name[i]); }
-		    printf(TURN_s, player_name[i]);
+		    else{ printf(TURN_s, player_name[i]);
 
 		    int num_dice = score[i] < 3 ? score[i] : 3;
 
@@ -260,7 +260,7 @@ void play_game(int seed, int num_players) {
 			   }
 	    print_scores(num_players);
             printf("    %d -- pot\n", pot);    
-	    }
+	    }} 
 
     // Replace this comment with your source code.
 }
