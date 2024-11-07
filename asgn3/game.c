@@ -215,19 +215,19 @@ void play_game(int seed, int num_players) {
 	int players_with_chips = 0;
         int last_player = -1;
 	for (int x = 0; x < num_players; x++) {
-                        if (score[x] > 0) {
-                        players_with_chips++;
+               if (score[x] >= 1) {
+                       players_with_chips++;
+			//printf("%d", players_with_chips);
                         last_player = x;
-                     }}
-
-        if (players_with_chips <= 1) {
-                      printf(ONE_PLAYER_HAS_CHIPS);
-                      printf(WON_s, player_name[last_player]);
-                      break;}
+	       }}
+                if (players_with_chips <= 1) {
+                    
+                     printf(WON_s, player_name[last_player]);
+                     break;}
 
 	    for (int i = 0; i < num_players; i++) {
-		   
-		   if (score[i] == 0) {
+		   int players_with_chips = 0;
+		    if (score[i] == 0) {
 			  players_with_chips = players_with_chips - 1;
 			  printf(HAS_NO_CHIPS_s, player_name[i]); }
 		    else{ printf(TURN_s, player_name[i]);
@@ -261,6 +261,18 @@ void play_game(int seed, int num_players) {
 		    }
 	    print_scores(num_players);
             printf("    %d -- pot\n", pot);
+	    for (int x = 0; x < num_players; x++) {
+            	if (score[x] >= 1) {
+                        players_with_chips++;
+                       //for debug: printf("%d", players_with_chips);
+                        last_player = x;
+                }}
+	    if (players_with_chips <= 1) {
+                        printf(ONE_PLAYER_HAS_CHIPS);
+                       // printf(WON_s, player_name[last_player]);
+                        break;}
+
+
 		    }    
 
     // Replace this comment with your source code.
