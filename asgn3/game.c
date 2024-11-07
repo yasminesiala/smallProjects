@@ -196,7 +196,7 @@ void print_scores(int num_players) {
     // Replace this comment with your source code.
 }
 
-/*
+/*i
 * Play the game.  See Section 2 of the assignment PDF for details.
 */
 void play_game(int seed, int num_players) {
@@ -211,30 +211,31 @@ void play_game(int seed, int num_players) {
     printf("    %d -- pot\n", pot);
 
     while (1) {
-	    int players_with_chips = 0;
-	    int last_player = -1;
+	//check if more than one player has chips 
+	int players_with_chips = 0;
+        int last_player = -1;
+	for (int x = 0; x < num_players; x++) {
+                        if (score[x] > 0) {
+                        players_with_chips++;
+                        last_player = x;
+                     }}
 
-	    for (int i = 0; i < num_players; i++){
-		    if (score[i] > 0) {
-			    players_with_chips++;
-		    	    last_player = i;
-		    }
- 	    }
-
-	    if (players_with_chips == 1) {
-		    printf(ONE_PLAYER_HAS_CHIPS);
-		    printf(WON_s, player_name[last_player]);
-		    break;
-	    }
+        if (players_with_chips <= 1) {
+                      printf(ONE_PLAYER_HAS_CHIPS);
+                      printf(WON_s, player_name[last_player]);
+                      break;}
 
 	    for (int i = 0; i < num_players; i++) {
-		    if (score[i] == 0) { printf(HAS_NO_CHIPS_s, player_name[i]); }
+		   
+		   if (score[i] == 0) {
+			  players_with_chips = players_with_chips - 1;
+			  printf(HAS_NO_CHIPS_s, player_name[i]); }
 		    else{ printf(TURN_s, player_name[i]);
 
 		    int num_dice = score[i] < 3 ? score[i] : 3;
 
 		    //roll and perform turns
-		    for (int j = 0; j < num_dice; j++){
+		    for (int j = 0; j < num_dice; j++) {
 			   int roll =  rand_roll();
 			   Symbol sym = symbol_of_roll[roll];
 			   char symbol_char = letter_of_symbol(sym);
@@ -256,12 +257,12 @@ void play_game(int seed, int num_players) {
 				   int right_player = right_of(i, num_players);
 				   score[i]--;
 				   score[right_player]++;
-			   	   printf(GIVES_A_CHIP_TO_s, player_name[right_player]);} 
-			   }
+			   	   printf(GIVES_A_CHIP_TO_s, player_name[right_player]);}
+		    }
 	    print_scores(num_players);
-            printf("    %d -- pot\n", pot);    
-	    }} 
+            printf("    %d -- pot\n", pot);
+		    }    
 
     // Replace this comment with your source code.
 }
-}
+}}
