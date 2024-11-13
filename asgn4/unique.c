@@ -33,7 +33,7 @@ void check_number(const char *s) {
 int main(int argc, char **argv) {
  Tree *tree = tree_alloc();
    if (tree == NULL) {
-        printf("Failed to allocate tree.\n");
+       // printf("Failed to allocate tree.\n");
         return 1;  // Exit early if tree allocation fails
     }
     int dump_flag = 0;

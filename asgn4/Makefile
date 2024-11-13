@@ -7,10 +7,10 @@ OBJECTS = tree.o unique.o unittests.o
 all: unique unittests
 
 unique: unique.o tree.o
-	$(CC) $(OBJECTS) -o unique
+	$(CC) $(CFLAGS) unique.o tree.o -o unique
 
 unittests: unittests.o tree.o
-	$(CC) $(OBJECTS) -o unittests
+	$(CC) $(CFLAGS) unittests.o tree.o -o unittests
 
 tree.o: tree.c
 	$(CC) $(CFLAGS) -c tree.c

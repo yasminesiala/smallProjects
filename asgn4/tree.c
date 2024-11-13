@@ -22,11 +22,11 @@
 void tree_print_node(Node *node) {
     if (node == NULL) {
 	   //debug:
-	   printf("NULL node encountered");
+	  // printf("NULL node encountered");
 	    return; } //node is empty nothing to do
 
     //debug:
-    printf("Printing node: %d (%d)\n", node->key, node->count);
+   // printf("Printing node: %d (%d)\n", node->key, node->count);
 
     tree_print_node(node->left); //traverse the left subtree
 
@@ -59,7 +59,7 @@ void tree_print(Tree *tree) {
 Tree *tree_alloc(void) {
     Tree *tree = (Tree *)calloc(1, sizeof(Tree));
     //debug:
-    printf("Allocating tree...\n");
+    //printf("Allocating tree...\n");
 
     assert(tree);
     tree->root = NULL;
@@ -83,21 +83,21 @@ void tree_add(Tree *tree, int key) {
 
     Node **current = &(tree->root); //starts w the address of the root 
     //debug:
-    printf("Inserting key: %d\n", key);
+    //printf("Inserting key: %d\n", key);
 
     while(*current != NULL) {
 	    if ((*current)->key == key) {
 		    (*current)->count++;
 		    //debug:
-		    printf("found existing key incrementing count\n");
+		   // printf("found existing key incrementing count\n");
 		    return;
 	    } else if (key < (*current)->key) {
 		    //debug:
-		    printf("going left\n");
+		   // printf("going left\n");
 		    current = &((*current)->left);
 	    } else {
 		    //debug:
-                    printf("going right\n");
+                   // printf("going right\n");
 		    current = &((*current)->right);
 	    }}
     
@@ -112,7 +112,7 @@ void tree_add(Tree *tree, int key) {
 
     *current = new_node; //link new node to tree
     //debug:
-    printf("inserted node w key: %d\n", key); 
+    //printf("inserted node w key: %d\n", key); 
     // replace this line with your source code
 }
 
