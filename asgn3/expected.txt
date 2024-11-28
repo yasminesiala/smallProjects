@@ -1,0 +1,31 @@
+Number of players (3 to 11)? Random-number seed? Current scores:
+    3 -- Ada Lovelace
+    3 -- Margaret Hamilton
+    3 -- Katherine Johnson
+    0 -- pot
+Ada Lovelace's turn:
+    Rolls R
+        Gives a chip to Katherine Johnson
+    Rolls C
+        Puts a chip in the pot
+    Rolls R
+        Gives a chip to Katherine Johnson
+Current scores:
+    0 -- Ada Lovelace
+    3 -- Margaret Hamilton
+    5 -- Katherine Johnson
+    1 -- pot
+Margaret Hamilton's turn:
+    Rolls C
+        Puts a chip in the pot
+    Rolls L
+        Gives a chip to Katherine Johnson
+    Rolls C
+        Puts a chip in the pot
+Current scores:
+    0 -- Ada Lovelace
+    0 -- Margaret Hamilton
+    6 -- Katherine Johnson
+    3 -- pot
+Now only one player has chips
+Katherine Johnson won!
