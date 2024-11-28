@@ -1,39 +1,37 @@
-./calc 1 2 > got.txt 
+#!/bin/bash
+
+# Test for ensuring every line of output ends with a newline.
+./calc 5 7 > got.txt
 CAT_EXIT_CODE=$?
 
-echo -e "3\n" > expected.txt
+# Create the expected output file.
+echo "12" > expected.txt
 
-# Expect exit code = 0.
-# Complain if exit code != 0.
+# Check exit code. Expect exit code = 0.
 if [ $CAT_EXIT_CODE -ne 0 ]; then
-    echo "wrong exit code" $?
-    rm expected.txt
-    rm got.txt
-
-    # Report failure to the calling script and exit.
+    echo "wrong exit code: $CAT_EXIT_CODE"
+    rm expected.txt got.txt
     exit 1
 fi
 
-# Check program output
-# Complain if it's unexpected.
-diff expected.txt got.txt
-if [ $? -ne 0 ]; then
-    # message on failure
+# Check program output. Ensure it matches and ends with a newline.
+if ! diff expected.txt got.txt; then
     echo "wrong output"
-    rm expected.txt
-    rm got.txt
-
-    # Report failure to the calling and exit.cript.
+    rm expected.txt got.txt
     exit 1
 fi
 
-# We made it this far.
-# Celebrate!
+# Check if the output ends with a newline.
+if [ "$(tail -c 1 got.text)" != $"\n"; then
+    echo "output does not end with newline"
+    rm expected.txt got.txt
+    exit 1
+fi
+
+# Test passed.
 echo "PASS"
 
-# Remove temporary files.
-rm expected.txt
-rm got.txt
-
-# Report success to the calling and exit.cript.
+# Cleanup.
+rm expected.txt got.txt
 exit 0
+
