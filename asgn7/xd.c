@@ -1,68 +1,99 @@
-#include <fcntl.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>  // Added this to avoid the isprint error
+#include <ctype.h> 
+#include <string.h>
 #include <errno.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #define BYTES_PER_LINE 16
 
 int main(int argc, char *argv[]) {
-    // Exit if more than one command line argument is provided
+    // Exit if more than one command line argument provided 
     if (argc > 2) {
         return 1;
     }
 
-    // Open the file using open(), not fopen()
-    int input = STDIN_FILENO; // default to stdin
+    int input = STDIN_FILENO;  // Use file descriptor instead of FILE pointer
     if (argc == 2) {
         input = open(argv[1], O_RDONLY);
         if (input == -1) {
-            // Silent error, just return 1 without printing anything
+            // Silent failure: don't print anything to stderr
             return 1;
+        }
+    }  
+
+    // Initialize variables:
+    unsigned char buffer[BYTES_PER_LINE];
+    ssize_t bytes_read;
+    size_t offset = 0;
+    
+    // To accumulate bytes until we have 16 bytes
+    size_t buffer_index = 0;
+    
+    while ((bytes_read = read(input, buffer + buffer_index, BYTES_PER_LINE - buffer_index)) > 0) {
+        buffer_index += bytes_read;
+
+        // When we have a full 16 bytes, print it
+        if (buffer_index == BYTES_PER_LINE) {
+            printf("%08zx: ", offset); // print the offset in hexadecimal
+
+            // Print hexadecimal column
+            for (size_t i = 0; i < BYTES_PER_LINE; i++) {
+                printf("%02x", buffer[i]);
+                if ((i + 1) % 2 == 0) {
+                    printf(" ");
+                }
+            }
+
+            // Print ASCII column
+            printf(" ");
+            for (size_t i = 0; i < BYTES_PER_LINE; i++) {
+                if (isprint(buffer[i])) {
+                    printf("%c", buffer[i]);
+                } else {
+                    printf(".");
+                }
+            }
+            printf("\n");
+
+            offset += BYTES_PER_LINE;
+            buffer_index = 0; // Reset buffer for next line
         }
     }
 
-    unsigned char buffer[BYTES_PER_LINE];
-    ssize_t bytes_read;  // `ssize_t` to match `read()` return type
-    size_t offset = 0;
-    
-    // Process the file in chunks of 16 bytes
-    while ((bytes_read = read(input, buffer, BYTES_PER_LINE)) > 0) {
-        printf("%08zx: ", offset); // Print the offset
+    // Handle remaining bytes if they are less than 16
+    if (buffer_index > 0) {
+        printf("%08zx: ", offset); // print the offset in hexadecimal
 
-        // Print the hexadecimal values
-        for (size_t i = 0; i < (size_t)bytes_read; i++) {  // Cast to size_t
-            if (i < (size_t)bytes_read) {
+        // Print hexadecimal column
+        for (size_t i = 0; i < BYTES_PER_LINE; i++) {
+            if (i < buffer_index) {
                 printf("%02x", buffer[i]);
             } else {
-                printf("  "); // Print spaces for missing bytes
+                printf("  "); // print spaces for missing bytes
             }
-            // Add space between every two hexadecimal digits
             if ((i + 1) % 2 == 0) {
                 printf(" ");
             }
         }
 
-        // Print the ASCII values
+        // Print ASCII column
         printf(" ");
-        for (size_t i = 0; i < (size_t)bytes_read; i++) {  // Cast to size_t
+        for (size_t i = 0; i < buffer_index; i++) {
             if (isprint(buffer[i])) {
                 printf("%c", buffer[i]);
             } else {
-                printf("."); 
+                printf(".");
             }
         }
-
         printf("\n");
-        offset += bytes_read;
     }
 
-    // Close the file descriptor if it's not stdin
+    // Clean up
     if (input != STDIN_FILENO) {
         close(input);
     }
-
     return 0;
 }
 
